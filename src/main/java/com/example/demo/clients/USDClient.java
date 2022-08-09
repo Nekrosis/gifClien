@@ -10,7 +10,6 @@ import java.util.Map;
 
 @FeignClient(name = "historical", url = "${feign.client.url.Today}")
 public interface USDClient {
-
     @RequestMapping(method = RequestMethod.GET)
     ResponseEntity<Map> getUSD();
 }

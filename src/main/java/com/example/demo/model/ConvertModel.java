@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ import java.util.Properties;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConvertService {
+public class ConvertModel {
     @JsonIgnore
     private String disclaimer;
     @JsonIgnore
@@ -42,7 +42,7 @@ public class ConvertService {
             properties.setProperty("feign.client.url.Today", "https://openexchangerates.org/api/historical/" + today + ".json?app_id=${idUSD}&symbols=RUB");
             properties.setProperty("feign.client.url.Yesterday", "https://openexchangerates.org/api/historical/" + yesterday + ".json?app_id=${idUSD}&symbols=RUB");
             properties.store(new FileOutputStream("src/main/resources/application.properties"), null);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

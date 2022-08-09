@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.ConvertService;
-import com.example.demo.clients.GifClient;
 import com.example.demo.clients.USDClient;
+import com.example.demo.model.ConvertModel;
+import com.example.demo.clients.GifClient;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +18,23 @@ import java.io.*;
 import java.util.*;
 
 @Controller
+@NoArgsConstructor
 public class FeignController {
     private Map<String, Double> usd = new HashMap<>();
-    String urlGif;
     @Value("${feign.client.url.Today}")
-    String todayURl;
+    private String todayURl;
     @Value("${feign.client.url.Yesterday}")
-    String yesterdayURl;
-    private final USDClient usdClient;
+    private String yesterdayURl;
     @Autowired
     private GifClient gifClient;
-
     @Autowired
-    public FeignController(USDClient usdClient) {
-        this.usdClient = usdClient;
-    }
+    private USDClient usdClient;
+
 
     @GetMapping(path = "/gif")
     public String getGif(Model model) {
+        convertToJson();
         Properties properties = new Properties();
-        usd.put("Today", convertToJson().get(0));
-        usd.put("Yesterday", convertToJson().get(1));
         try {
             InputStream in = new FileInputStream("src/main/resources/application.properties");
             properties.load(in);
@@ -51,31 +48,34 @@ public class FeignController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String lol = "$['data']['images']['original']['mp4']";
+        String jsonpathCreatorURL = "$['data']['images']['original']['url']";
         DocumentContext documentContext = JsonPath.parse(gifClient.getGif().getBody());
-        urlGif = documentContext.read(lol);
-        model.addAttribute("url", urlGif);
-        System.out.println(model);
+        String GifURL = documentContext.read(jsonpathCreatorURL);
+        model.addAttribute("url", GifURL);
         return "index";
     }
 
     @GetMapping(path = "/USD")
-    ResponseEntity<Map> getUSD() {
+    public ResponseEntity<Map> getUSD() {
+        usdClient.getUSD().getBody();
+        convertToJson();
         return ResponseEntity.ok(usd);
     }
 
-    public List<Double> convertToJson() {
+    public Map<String, Double> convertToJson() {
         String[] listURL = {todayURl, yesterdayURl};
-        List<Double> list = new ArrayList<>();
-        ConvertService convertService;
+        String[] date = {"Today", "Yesterday"};
+        int count = 0;
+        ConvertModel convertModel;
         RestTemplate restTemplate = new RestTemplate();
-        for (String s : listURL) {
-            convertService = restTemplate.getForObject(s, ConvertService.class);
-            assert convertService != null;
-            for (Map.Entry<String, Double> stringDoubleEntry : convertService.getRates().entrySet()) {
-                list.add(stringDoubleEntry.getValue());
+        for (String url : listURL) {
+            convertModel = restTemplate.getForObject(url, ConvertModel.class);
+            assert convertModel != null;
+            for (Map.Entry<String, Double> stringDoubleEntry : convertModel.getRates().entrySet()) {
+                usd.put(date[count], stringDoubleEntry.getValue());
+                count++;
             }
         }
-        return list;
+        return usd;
     }
 }
