@@ -1,6 +1,6 @@
-package com.example.demo.service;
+package com.example.gifAndUsdService.service;
 
-import com.example.demo.clients.GifClient;
+import com.example.gifAndUsdService.clients.GifClient;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.example.gifAndUsdService.service;
 
-import com.example.demo.clients.UsdClientToday;
-import com.example.demo.clients.UsdClientYesterday;
+import com.example.gifAndUsdService.clients.UsdClientToday;
+import com.example.gifAndUsdService.clients.UsdClientYesterday;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.Data;

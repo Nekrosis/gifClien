@@ -1,8 +1,8 @@
-package com.example.demo.controller;
+package com.example.gifAndUsdService.controller;
 
 
-import com.example.demo.service.GifService;
-import com.example.demo.service.UsdService;
+import com.example.gifAndUsdService.service.GifService;
+import com.example.gifAndUsdService.service.UsdService;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

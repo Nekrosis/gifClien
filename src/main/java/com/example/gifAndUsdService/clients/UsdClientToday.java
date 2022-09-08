@@ -1,4 +1,4 @@
-package com.example.demo.clients;
+package com.example.gifAndUsdService.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

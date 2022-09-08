@@ -1,6 +1,6 @@
-package com.example.demo;
+package com.example.gifAndUsdService;
 
-import com.example.demo.controller.GifAndUsdController;
+import com.example.gifAndUsdService.controller.GifAndUsdController;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-class DemoApplicationTests {
+class GifAndUsdServiceApplicationTests {
 @Autowired
 GifAndUsdController gifAndUsdController;
     @Test

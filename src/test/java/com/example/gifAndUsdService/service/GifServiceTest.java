@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.gifAndUsdService.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
