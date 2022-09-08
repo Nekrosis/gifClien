@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.controller.FeignController;
+import com.example.demo.controller.GifAndUsdController;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class DemoApplicationTests {
 @Autowired
-    FeignController feignController;
+GifAndUsdController gifAndUsdController;
     @Test
     void contextLoads() {
-        assertThat(feignController).isNotNull();
+        assertThat(gifAndUsdController).isNotNull();
     }
 
 }
