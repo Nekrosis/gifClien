@@ -1,76 +1,65 @@
 package com.example.gifAndUsdService.service;
 
-import com.example.gifAndUsdService.clients.UsdClientToday;
-import com.example.gifAndUsdService.clients.UsdClientYesterday;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gifAndUsdService.clients.CurrencyClient;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
-@Data
+@RequiredArgsConstructor
 public class UsdService {
-    @Autowired
-    private UsdClientYesterday yesterday;
-    @Autowired
-    private UsdClientToday today;
-    private final Map<String, Double> rubleToDollarExchangeRate = new HashMap<>();
+    private final Map<String, BigDecimal> cache = new ConcurrentHashMap<>();
+    private final Clock clock;
+    private final CurrencyClient currencyClient;
 
-    public Map<String, Double> getUSD() {
-        setPropertiesUsd();
-        String jsonpathCreatorURL = "$['rates']['RUB']";
-        DocumentContext documentContextToday = JsonPath.parse(today.getUsdToday());
-        DocumentContext documentContextYesterday = JsonPath.parse(yesterday.getUsdYesterday());
-        Double today = documentContextToday.read(jsonpathCreatorURL);
-        Double yesterday = documentContextYesterday.read(jsonpathCreatorURL);
-        rubleToDollarExchangeRate.put("Today", today);
-        rubleToDollarExchangeRate.put("Yesterday", yesterday);
-        return rubleToDollarExchangeRate;
+    public BigDecimal getToday() {
+        var date = LocalDate.now(clock).format(DateTimeFormatter.ISO_DATE);
+        return getRate(date);
     }
 
-    public void setPropertiesGif() {
-        Properties properties = new Properties();
-        try {
-            InputStream in = new FileInputStream("src/main/resources/application.properties");
-            properties.load(in);
-            if (rubleToDollarExchangeRate.get("Today") > rubleToDollarExchangeRate.get("Yesterday")) {
-                properties.setProperty("gif.client.url", "https://api.giphy.com/v1/gifs/random?api_key=${idGif}&tag=rich&rating=g&bundle=clips_grid_picker");
-            } else {
-                properties.setProperty("gif.client.url", "https://api.giphy.com/v1/gifs/random?api_key=${idGif}&tag=broke&rating=g&bundle=clips_grid_picker");
-            }
-            properties.store(new FileOutputStream("src/main/resources/application.properties"), null);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public BigDecimal getYesterday() {
+        var date = LocalDate.now(clock).minusDays(1).format(DateTimeFormatter.ISO_DATE);
+        return getRate(date);
     }
 
-    public void setPropertiesUsd() {
-        DateTimeFormatter date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.now();
-        LocalDate yesterdayDate = localDate.minusDays(1);
-        String today = date.format(localDate);
-        String yesterday = date.format(yesterdayDate);
-        Properties properties = new Properties();
-        try {
-            InputStream in = new FileInputStream("src/main/resources/application.properties");
-            properties.load(in);
-            properties.setProperty("feign-client-url.today", "https://openexchangerates.org/api/historical/" + today + ".json?app_id=${idUSD}&symbols=RUB");
-            properties.setProperty("feign-client-url.yesterday", "https://openexchangerates.org/api/historical/" + yesterday + ".json?app_id=${idUSD}&symbols=RUB");
-            properties.store(new FileOutputStream("src/main/resources/application.properties"), null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    //for debug only
+    public Map<String, BigDecimal> getUSD() {
+        getToday();
+        getYesterday();
+        return cache;
     }
+
+    @TestOnly
+    @VisibleForTesting
+    void clearCache() {
+        cache.clear();
+    }
+
+    private BigDecimal getRate(String date) {
+        return cache.computeIfAbsent(date, it -> {
+            var response = currencyClient.getRate(it);
+            var rate = response.getRates().getRub().setScale(6, RoundingMode.HALF_UP);
+            log.info("Rate for {} is {}", date, rate);
+            return rate;
+        });
+    }
+
+//    private BigDecimal parseResponse(String response) {
+//        var jsonpathCreatorURL = "$['rates']['RUB']";
+//        var context = JsonPath.parse(response);
+//        var rateRaw = context.<Number>read(jsonpathCreatorURL);
+//        return BigDecimal.valueOf(rateRaw.doubleValue());
+//    }
 }
+

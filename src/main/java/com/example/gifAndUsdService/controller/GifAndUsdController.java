@@ -3,23 +3,23 @@ package com.example.gifAndUsdService.controller;
 
 import com.example.gifAndUsdService.service.GifService;
 import com.example.gifAndUsdService.service.UsdService;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Controller
-@NoArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
 public class GifAndUsdController {
-    @Autowired
-    private GifService gifService;
-    @Autowired
-    private UsdService usdService;
+    private final GifService gifService;
+    private final UsdService usdService;
 
 
     @GetMapping(path = "/gif")
@@ -29,7 +29,7 @@ public class GifAndUsdController {
     }
 
     @GetMapping(path = "/usd")
-    public ResponseEntity<Map<String, Double>> getUSD() {
+    public ResponseEntity<Map<String, BigDecimal>> getUSD() {
         return ResponseEntity.ok(usdService.getUSD());
     }
 }

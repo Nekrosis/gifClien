@@ -1,23 +1,32 @@
 package com.example.gifAndUsdService.service;
 
 import com.example.gifAndUsdService.clients.GifClient;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class GifService {
-    @Autowired
-    private GifClient gifClient;
-    @Autowired
-    private UsdService usdService;
+
+    private final GifClient gifClient;
+    private final UsdService usdService;
 
     public String getGif() {
-        usdService.getUSD();
-        usdService.setPropertiesGif();
-        String jsonpathCreatorURL = "$['data']['images']['original']['url']";
-        DocumentContext documentContext = JsonPath.parse(gifClient.getGif());
-        return documentContext.read(jsonpathCreatorURL).toString();
+        if (usdService.getToday().compareTo(usdService.getYesterday()) >= 0) {
+            log.info("You are rich");
+            return gifClient.getRandomRich().getData().getImages().getOriginal().getUrl();
+        } else {
+            log.info("You are broke");
+            return gifClient.getRandomBroke().getData().getImages().getOriginal().getUrl();
+        }
     }
+
+//    private String parse(String response) {
+//        String jsonpathCreatorURL = "$['data']['images']['original']['url']";
+//        DocumentContext documentContext = JsonPath.parse(response);
+//        return documentContext.read(jsonpathCreatorURL).toString();
+//    }
 }
