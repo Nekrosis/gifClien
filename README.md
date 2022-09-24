@@ -20,6 +20,8 @@ Alfa - тестовое задание
 - Для сборки должен использоваться gradle
 - Результатом выполнения должен быть репо на github с инструкцией по запуску
 
--Ссылка для Gif localhost:8080/gif
--Ссылка для Currency localhost:8080/usd
-Для тестов закомитить @Bean Clock в классе GifAndUsdServiceApplication
+
+По запуску:
+- Ссылка для Gif localhost:8080/gif
+- Ссылка для Currency localhost:8080/usd
+- Для тестов закомитить @Bean Clock в классе GifAndUsdServiceApplication
