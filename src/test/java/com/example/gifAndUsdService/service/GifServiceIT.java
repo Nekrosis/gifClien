@@ -12,19 +12,43 @@ class GifServiceIT extends BaseIT {
 
     @Test
     void getCorrectedRichUrl() {
-        whenUrlRich(URL_RICH);
+        whenRateIs("2019-01-10","60.000000");
+        whenRateIs("2019-01-09","59.000000");
+        whenUrlRich();
         var actual = gifService.getGif();
         assertThat(actual).isEqualTo(URL_RICH);
+    }@Test
+    void getCorrectedBrokeUrl() {
+        whenRateIs("2019-01-10","60.000000");
+        whenRateIs("2019-01-09","65.000000");
+        whenUrlBroke();
+        var actual = gifService.getGif();
+        assertThat(actual).isEqualTo(URL_BROKE);
     }
 
 
-    private void whenUrlRich(String url) {
+    private void whenUrlRich() {
         var response = GifResponse.builder()
                 .data(new GifResponse
                         .GifResponseData(new GifResponse
                         .GifResponseImages(new GifResponse
-                        .GifResponseOriginal(url))))
+                        .GifResponseOriginal(URL_RICH))))
                 .build();
         when(gifClient.getRandomRich()).thenReturn(response);
     }
+    private void whenUrlBroke() {
+        var response = GifResponse.builder()
+                .data(new GifResponse
+                        .GifResponseData(new GifResponse
+                        .GifResponseImages(new GifResponse
+                        .GifResponseOriginal(URL_BROKE))))
+                .build();
+        when(gifClient.getRandomBroke()).thenReturn(response);
+    }
+//    void whenRateIs(String date, String rate) {
+//        var response = CurrencyRateResponse.builder()
+//                .rates(new CurrencyRateResponse.CurrencyRates(new BigDecimal(rate)))
+//                .build();
+//        when(currencyClient.getRate(date)).thenReturn(response);
+//    }
 }

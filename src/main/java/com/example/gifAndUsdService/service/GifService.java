@@ -23,10 +23,4 @@ public class GifService {
             return gifClient.getRandomBroke().getData().getImages().getOriginal().getUrl();
         }
     }
-
-//    private String parse(String response) {
-//        String jsonpathCreatorURL = "$['data']['images']['original']['url']";
-//        DocumentContext documentContext = JsonPath.parse(response);
-//        return documentContext.read(jsonpathCreatorURL).toString();
-//    }
 }

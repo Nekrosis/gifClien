@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -54,12 +55,5 @@ public class UsdService {
             return rate;
         });
     }
-
-//    private BigDecimal parseResponse(String response) {
-//        var jsonpathCreatorURL = "$['rates']['RUB']";
-//        var context = JsonPath.parse(response);
-//        var rateRaw = context.<Number>read(jsonpathCreatorURL);
-//        return BigDecimal.valueOf(rateRaw.doubleValue());
-//    }
 }
 

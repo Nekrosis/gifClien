@@ -1,13 +1,8 @@
 package com.example.gifAndUsdService.service;
 
-import com.example.gifAndUsdService.models.CurrencyRateResponse;
-import com.example.gifAndUsdService.models.CurrencyRateResponse.CurrencyRates;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 
 class UsdServiceIT extends BaseIT {
@@ -19,9 +14,7 @@ class UsdServiceIT extends BaseIT {
     void shouldReturnCorrectRateForToday() {
         whenRateIs(TODAY_DATE, "60.000000");
         whenRateIs(YESTERDAY_DATE, "65.000000");
-
         var actual = usdService.getToday();
-
         assertThat(actual).isEqualTo("60.000000");
     }
 
@@ -29,16 +22,14 @@ class UsdServiceIT extends BaseIT {
     void shouldReturnCorrectRateForYesterday() {
         whenRateIs(TODAY_DATE, "60.000000");
         whenRateIs(YESTERDAY_DATE, "65.000000");
-
         var actual = usdService.getYesterday();
-
         assertThat(actual).isEqualTo("65.000000");
     }
 
-    private void whenRateIs(String date, String rate) {
-        var response = CurrencyRateResponse.builder()
-                .rates(new CurrencyRates(new BigDecimal(rate)))
-                .build();
-        when(currencyClient.getRate(date)).thenReturn(response);
-    }
+//     void whenRateIs(String date, String rate) {
+//        var response = CurrencyRateResponse.builder()
+//                .rates(new CurrencyRateResponse.CurrencyRates(new BigDecimal(rate)))
+//                .build();
+//        when(currencyClient.getRate(date)).thenReturn(response);
+//    }
 }

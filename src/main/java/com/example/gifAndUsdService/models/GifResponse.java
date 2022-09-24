@@ -24,7 +24,7 @@ public class GifResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GifResponseOriginal {
-        @JsonProperty("URL")
+        @JsonProperty("url")
         private String url;
     }
 
