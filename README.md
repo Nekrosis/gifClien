@@ -24,4 +24,3 @@ Alfa - тестовое задание
 По запуску:
 - Ссылка для Gif localhost:8080/gif
 - Ссылка для Currency localhost:8080/usd
-- Для тестов закомитить @Bean Clock в классе GifAndUsdServiceApplication
