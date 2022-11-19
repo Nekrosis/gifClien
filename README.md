@@ -1,6 +1,4 @@
-# gifClien
-Rich GIFs - Find & Share on GIPHY
-Find GIFs with the latest and newest hashtags! Search, discover and share your favorite Rich GIFs. The best GIFs are on GIPHY.
+# gifClieент
 
 Alfa - тестовое задание
 
