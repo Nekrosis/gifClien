@@ -1,4 +1,4 @@
-# gifClieент
+# gifClient
 
 Alfa - тестовое задание
 

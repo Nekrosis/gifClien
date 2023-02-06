@@ -25,11 +25,4 @@ class UsdServiceIT extends BaseIT {
         var actual = usdService.getYesterday();
         assertThat(actual).isEqualTo("65.000000");
     }
-
-//     void whenRateIs(String date, String rate) {
-//        var response = CurrencyRateResponse.builder()
-//                .rates(new CurrencyRateResponse.CurrencyRates(new BigDecimal(rate)))
-//                .build();
-//        when(currencyClient.getRate(date)).thenReturn(response);
-//    }
 }

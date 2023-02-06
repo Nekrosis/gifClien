@@ -45,10 +45,4 @@ class GifServiceIT extends BaseIT {
                 .build();
         when(gifClient.getRandomBroke()).thenReturn(response);
     }
-//    void whenRateIs(String date, String rate) {
-//        var response = CurrencyRateResponse.builder()
-//                .rates(new CurrencyRateResponse.CurrencyRates(new BigDecimal(rate)))
-//                .build();
-//        when(currencyClient.getRate(date)).thenReturn(response);
-//    }
 }
